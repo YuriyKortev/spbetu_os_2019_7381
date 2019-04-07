@@ -216,7 +216,7 @@ to_print:
 		call PRINT
 
 		xor		al,al
-		mov 	ah,3ch
+		mov 	ah,4ch
 		int		21h
 		ret
 TESTPC 	ENDS
