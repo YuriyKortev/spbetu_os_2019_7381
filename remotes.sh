@@ -1,3 +1,4 @@
+git remote add ilyasov https://github.com/IlyasovAnton/spbetu_os_2019_7381.git
 git remote add dorokh https://github.com/PrimeBR/spbetu_os_2019_7381.git
 git remote add sudakova https://github.com/polinasudakova/spbetu_os_2019_7381.git
 git remote add aliasova https://github.com/Aliaska-An/spbetu_os_2019_7381.git
