@@ -6,3 +6,4 @@ git fetch vologdin
 git fetch trushnikov
 git fetch gabov
 git fetch procvetkina
+git fetch kushkoeva
