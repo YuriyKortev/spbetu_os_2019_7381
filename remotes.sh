@@ -7,3 +7,7 @@ git remote add trushnikov https://github.com/AndersonGH/spbetu_os_2019_7381.git
 git remote add gabov https://github.com/GabovYegor/spbetu_os_2019_7381.git
 git remote add procvetkina https://github.com/ana24stasiya/spbetu_os_2019_7381.git
 git remote add kushkoeva https://github.com/kaoloq/spbetu_os_2019_7381.git
+git remote add minullin https://github.com/Fikafusik/spbetu_os_2019_7381.git
+git remote add pavlov https://github.com/AleAlexander/spbetu_os_2019_7381.git
+git remote add adamov https://github.com/yaroslavadamov/spbetu_os_2019_7381.git
+git remote add krevchik https://github.com/Angelina151612/spbetu_os_2019_7381.git
