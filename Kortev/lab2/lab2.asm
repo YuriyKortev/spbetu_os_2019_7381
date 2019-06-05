@@ -88,30 +88,30 @@ Print PROC near
 Print ENDP
 
 Unavailable_memory_adress PROC near
-	mov ax,ds:[2] 
+	mov ax,ds:[2] 		;адрес недоступной памяти
 	mov es,ax
 	mov di,offset UnavMemAdr+3
 
 	call WRD_TO_HEX
-	mov dx,offset unavailableMemAdr
+	lea dx, unavailableMemAdr
 	call Print
-	mov dx,offset UnavMemAdr
+	lea dx, UnavMemAdr
 	call Print
-	mov dx,offset ENDL
+	lea dx, ENDL
 	call Print
 	ret
 Unavailable_memory_adress ENDP
 
 Environment_adress PROC near 
-	mov ax,ds:[2Ch] 
+	mov ax,ds:[2Ch] ;адрес среды
 	mov di,offset EnvAdr+3
 
 	call WRD_TO_HEX
-	mov dx,offset EnvirAdr
+	lea dx, EnvirAdr
 	call Print
-	mov dx,offset EnvAdr
+	lea dx, EnvAdr
 	call Print
-	mov dx,offset ENDL
+	lea dx, ENDL
 	call Print
 	ret
 Environment_adress ENDP
@@ -129,32 +129,32 @@ Print_tail PROC near ; хвост командной строки в симво�
 	ret
 	case_tail:
 	
-	mov dx,offset PrintTail
-	call Print
+		lea dx, PrintTail
+		call Print
 	
-	mov bp,offset TAIL
-	cycle:
-	mov di,cx
-	mov bl,ds:[di+80h]
-	mov ds:[bp+di-1],bl
-	loop cycle
+		lea bp, TAIL
+		cycle:
+			mov di,cx
+			mov bl,ds:[di+80h]
+			mov ds:[bp+di-1],bl
+		loop cycle
 	
-	mov dx,offset TAIL
-	call Print
-	mov dx, offset ENDL
-	call Print
-	ret
+		lea dx, TAIL
+		call Print
+		lea dx, ENDL
+		call Print
+		ret
 Print_tail ENDP
 
 Print_environment PROC near 
-	mov dx, offset EnvCont
+	lea dx, EnvCont
 	call Print
 
 	mov ax,ds:[2ch]
 	mov es,ax
 	
 	xor bp,bp
-	cycle1:
+	cycle1:			;печать содержимого среды
 		cmp word ptr es:[bp],0001h 
 		je case_exit1
 		cmp byte ptr es:[bp],00h 
@@ -169,14 +169,14 @@ Print_environment PROC near
 			inc bp
 			jmp cycle1
 	case_exit1:
-		add bp,2
+	add bp,2
 	
-		mov dx, offset ENDL
-		call Print
-		mov dx, offset ModulePath
-		call Print
+	lea dx, ENDL
+	call Print
+	lea dx, ModulePath
+	call Print
 	
-	cycle2:
+	cycle2:	;печать расположения модуля
 		cmp byte ptr es:[bp],00h
 		je case_exit2
 		mov dl,es:[bp]
