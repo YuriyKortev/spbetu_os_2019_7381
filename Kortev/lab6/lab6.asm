@@ -51,26 +51,26 @@ MAIN PROC
     int 21h      ; эта функция позволяет уменьшить отведенный программе блок памяти
     jnc success ; если не может быть выполнена то выставится флаг CF=1 и в ах вынесется код ошибки
     cmp ax,07h ; разрушен управляющий блок памяти
-    je error1j
+    je case_error1
     cmp ax,08h ; недостаточно памяти для выполнения функции
-    je error3j
+    je case_error3
     cmp ax,09h ; неверный адрес блока пямяти
-    je error2j
-error1j:
+    je case_error2
+case_error1:
     lea dx,error1
     call Print
     jmp ending
-error2j:
+case_error2:
     lea dx,error2
     call Print
     jmp ending
-error3j:
+case_error3:
     lea dx,error3
     call Print
     jmp ending
 
-success: 
-    mov byte ptr [par_block],00h
+success: ;создание блока параметров
+    mov byte ptr [par_block],00h ;наследуем среду 1го модуля
     mov es,es:[2Ch]               
     mov si,00h
 is_zero:        
@@ -83,35 +83,35 @@ is_zero:
 write_path:  
     mov cl,es:[si]
     cmp cl,00h
-    je flagn
+    je case_flag
     cmp cl,'\'
     jne not_yet
     mov position,di
-not_yet:
-    mov byte ptr [filepath+DI],cl
-    inc si
-    inc di
-    jmp write_path
-flagn:
+	not_yet:
+		mov byte ptr [filepath+DI],cl
+		inc si
+		inc di
+		jmp write_path
+case_flag:
     mov bx,position
     inc bx
-    mov byte ptr [filepath+BX],'l'
+    mov byte ptr [filepath+bx],'l'
     inc bx
-    mov byte ptr [filepath+BX],'a'
+    mov byte ptr [filepath+bx],'a'
     inc bx
-    mov byte ptr [filepath+BX],'b'
+    mov byte ptr [filepath+bx],'b'
     inc bx
-    mov byte ptr [filepath+BX],'2'
+    mov byte ptr [filepath+bx],'2'
     inc bx
-    mov byte ptr [filepath+BX],'.'
+    mov byte ptr [filepath+bx],'.'
     inc bx
-    mov byte ptr [filepath+BX],'c'
+    mov byte ptr [filepath+bx],'c'
     inc bx
-    mov byte ptr [filepath+BX],'o'
+    mov byte ptr [filepath+bx],'o'
     inc bx
-    mov byte ptr [filepath+BX],'m'
+    mov byte ptr [filepath+bx],'m'
     inc bx
-    mov byte ptr [filepath+BX],'$'
+    mov byte ptr [filepath+bx],'$'
     push ds
     push es
     mov KEEP_SP, sp
@@ -130,40 +130,40 @@ flagn:
     pop ds
     
 
-    jnc is_performed_4Bh
+    jnc is_performed_4Bh ;если флаг = 0 то успешно
     cmp ax,01h
-    je error6j
+    je case_error6
     cmp ax,02h
-    je error4j
+    je case_error4
     cmp ax,05h
-    je error5j
+    je case_error5
     cmp ax,08h
-    je error3j_4Bh
+    je case_error3_4Bh
     cmp ax,0Ah
-    je error8j
+    je case_error8
     cmp ax,0Bh
-    je error9j
-error6j:
+    je case_error9
+case_error6:
     lea dx,error6
     call Print
     jmp ending
-error4j:
+case_error4:
     lea dx,error4
     call Print
     jmp ending
-error5j:
+case_error5:
     lea dx,error5
     call Print
     jmp ending
-error3j_4Bh:
+case_error3_4Bh:
     lea dx,error7
     call Print
     jmp ending
-error8j:
+case_error8:
     lea dx,error8
     call Print
     jmp ending
-error9j:
+case_error9:
     lea dx,error9
     call Print
     jmp ending
