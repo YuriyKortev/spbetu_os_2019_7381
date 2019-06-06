@@ -162,11 +162,13 @@ ROUT_END:
     iret
 ROUT ENDP
 
+
+
 Check PROC
     mov ah,35h ; функция получения вектора
     mov al,1Ch ; номер вектора
     int 21h 		
-    mov si,offset IDENT 
+    lea si, IDENT 
     sub si,offset ROUT 
     mov ax,'00'
     cmp ax,es:[bx+si] 
@@ -176,7 +178,7 @@ Check PROC
 
 UnLoad:
     call Set_Int
-    mov dx,offset LAST_BYTE ; размер в байтах от начала
+    lea dx, LAST_BYTE ; размер в байтах от начала
     mov cl,4 ; первод в параграфы
     shr dx,cl
     inc dx ; размер в параграфах
@@ -201,14 +203,14 @@ Load:
 BACK:
     pop ax
     pop es
-    mov dx,offset alreadyLoaded
+    lea dx, alreadyLoaded
     call Print
     ret
 UnLoad_:
     pop ax
     pop es
     mov byte ptr ES:[BX+SI+10],1
-    mov dx,offset UnLoaded
+    lea dx, UnLoaded
     call Print
     ret
 Check ENDP
@@ -221,7 +223,7 @@ Set_Int PROC
     int 21h
     mov KEEP_IP,bx ; запоминание смещения
     mov KEEP_CS,es ; и сегмента
-    mov dx,offset ROUT ; смещение для процедуры в DX
+    lea dx, ROUT ; смещение для процедуры в DX
     mov ax,seg ROUT ; сегмент процедуры
     mov ds,AX ; помещаем в DS
     mov ah,25h ; функция установки вектора прерывания на указанный адрес
