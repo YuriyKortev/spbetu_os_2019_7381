@@ -88,32 +88,32 @@ ret
 Path ENDP
 
 Clear_Memory PROC NEAR ; освобождение памяти для загрузки оверлеев
-mov bx,offset LAST_BYTE 
+lea bx, LAST_BYTE 
 mov ax,es 
-sub bx,ax 
+sub ax,bx 
 mov cl,4h
-shr bx,cl 
+shl bx,cl 
 mov ah,4Ah ; освобождение памяти перед загрузкой оверлея
 int 21h
-jnc end_clear 
+jnc success ;если ошибок нет
 
 call Errors
 xor al,al
 mov ah,4Ch
 int 21h
-end_clear:
+success:
 ret
 Clear_Memory ENDP
 
 Errors PROC NEAR
 cmp ax,7
-mov dx,offset memryblockdestroyed
+lea dx, memryblockdestroyed
 je print1
 cmp ax,8
-mov dx,offset not_en_mem
+lea dx, not_en_mem
 je print1
 cmp ax,9
-mov dx,offset wrong_adress
+lea dx, wrong_adress
 je print1
 
 print1:
@@ -134,7 +134,7 @@ check_end:
 cmp byte PTR es:[bx], 0
 jnz get_variables
 add bx, 3
-mov si, offset Overl_Path
+lea si, Overl_Path
 ret
 Variables ENDP
 
@@ -172,11 +172,11 @@ je err2
 jmp no_err_size
 
 err1:
-mov dx, offset filenf
+lea dx, filenf
 call Print
 jmp exit
 err2:
-mov dx, offset no_path
+lea dx, no_path
 call Print
 jmp exit
 
@@ -184,7 +184,7 @@ no_err_size:
 push es
 push bx
 push si
-mov si, offset DTA
+lea si, DTA
 add si, 1Ch ; в слове со смещением 1Сh в  DTA будет находиться старшее слово размера памяти в байтах
 mov bx, [si]
 
@@ -301,11 +301,11 @@ mov ax, seg DATA
 mov ds, ax
 mov KEEP_PSP, es
 call Clear_Memory
-mov bp, offset str_overlay1
+lea bp, str_overlay1
 call OVL_Path
 call ovl_size
 call Run_ovl
-mov bp, offset str_overlay2
+lea bp, str_overlay2
 call OVL_Path
 call ovl_size
 call Run_ovl
