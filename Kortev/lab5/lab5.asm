@@ -108,7 +108,7 @@ Set_Int PROC
     mov al,09h 
     int 21h
     pop ds
-    mov dx,offset loaded
+    lea dx, loaded
     call Print
     pop dx
     pop ax
@@ -118,7 +118,7 @@ Set_Int ENDP
 Rem_Int PROC
     push ax
     push ds
-    CLI
+    cli
     mov ah,35h 
     mov al,09h
     int 21h
@@ -141,7 +141,7 @@ Rem_Int PROC
     pop es
     mov ah,49h
     int 21h
-    STI
+    sti
     pop ax
     ret
 Rem_Int ENDP
@@ -153,16 +153,16 @@ MAIN PROC Far
     mov ah,35h
     mov al,09h
     int 21h
-    mov si,offset IDFN 
+    lea si, IDFN 
     sub si,offset ROUT
     mov ax,'00'
     cmp ax,es:[bx+si]
     jne not_loaded
     cmp ax,es:[bx+si+2]
-    je loadd
+    je case_load
 not_loaded:
     call Set_Int
-    mov dx,offset LAST_BYTE
+    lea dx, LAST_BYTE
     mov cl,4
     shr dx,cl
     inc dx
@@ -171,7 +171,7 @@ not_loaded:
     xor al,al
     mov ah,31h 
     int 21h
-loadd:
+case_load:
     push es
     push ax
     mov ax,KEEP_PSP
@@ -188,14 +188,14 @@ loadd:
 not_unloaded:
     pop ax
     pop es
-    mov dx,offset alreadyloaded
+    lea dx, alreadyloaded
     call Print
     jmp ending
 unload:
     pop ax
     pop es
     call Rem_Int
-    mov dx,offset unloaded
+    lea dx, unloaded
     call Print
 ending:
     xor al,al
