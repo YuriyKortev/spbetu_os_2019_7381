@@ -49,7 +49,7 @@ MAIN PROC
     mov bx,ax ; в регистр bx-число параграфов, которые будут выделяться в программе
     mov ax,4A00h ; сначала нужно освободить место в памяти
     int 21h      ; эта функция позволяет уменьшить отведенный программе блок памяти
-    jnc success ; если не может быть выполнена то выставится флаг CF=1 и в ах вынесется код ошибки
+    jnc case_next_step ; если не может быть выполнена то выставится флаг CF=1 и в ах вынесется код ошибки
     cmp ax,07h ; разрушен управляющий блок памяти
     je case_error1
     cmp ax,08h ; недостаточно памяти для выполнения функции
@@ -69,15 +69,15 @@ case_error3:
     call Print
     jmp ending
 
-success: ;создание блока параметров
+case_next_step: ;создание блока параметров
     mov byte ptr [par_block],00h ;наследуем среду 1го модуля
     mov es,es:[2Ch]               
     mov si,00h
-is_zero:        
+case_zero:        ;пропуск элементов среды
     mov ax,es:[si]  
     inc si
     cmp ax,0000h
-    jne is_zero
+    jne case_zero
     add si,03h
     mov di,00h
 write_path:  
@@ -88,7 +88,7 @@ write_path:
     jne not_yet
     mov position,di
 	not_yet:
-		mov byte ptr [filepath+DI],cl
+		mov byte ptr [filepath+di],cl
 		inc si
 		inc di
 		jmp write_path
@@ -114,7 +114,7 @@ case_flag:
     mov byte ptr [filepath+bx],'$'
     push ds
     push es
-    mov KEEP_SP, sp
+    mov KEEP_SP, sp	;сохранение регистров
     mov KEEP_SS, ss
     mov sp,0FEh
     mov ax,CODE
