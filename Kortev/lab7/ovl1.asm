@@ -8,12 +8,12 @@ OVERLAY PROC FAR
 	push ds
 	mov	ax, cs
 	mov	ds, ax
-	mov bx, offset adress
-	add bx, 46
+	lea bx, adress
+	add bx, 40
 	mov di, bx
 	mov ax, cs
 	call WRD_TO_HEX
-	mov dx, offset adress
+	lea dx, adress
 	call PRINT
 	pop	ds
 	pop	di

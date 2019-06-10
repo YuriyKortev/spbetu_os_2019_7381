@@ -49,18 +49,19 @@ mov es, ax
 mov bx, 0
 mov cx, 2
 call Variables
-call Path
+lea si, Overl_Path
+call Get_path
 
-get_way:
+case_get_way:
 mov ah, [di]
 mov [si], ah
 cmp ah, 0
-jz check_way
+jz case_check_way
 inc di
 inc si
-jmp get_way
+jmp case_get_way
 
-check_way:
+case_check_way:
 pop es
 pop di
 pop si
@@ -71,7 +72,7 @@ pop ax
 ret
 OVL_Path ENDP
 
-Path PROC NEAR
+Get_path PROC NEAR
 get_path:
 mov al, es:[bx]
 mov [si], al
@@ -85,7 +86,7 @@ check_path:
 sub si, 9
 mov di, bp
 ret
-Path ENDP
+Get_path ENDP
 
 Clear_Memory PROC NEAR ; освобождение памяти для загрузки оверлеев
 lea bx, LAST_BYTE 
@@ -95,13 +96,13 @@ mov cl,4h
 shl bx,cl 
 mov ah,4Ah ; освобождение памяти перед загрузкой оверлея
 int 21h
-jnc success ;если ошибок нет
+jnc case_no_errors ;если ошибок нет
 
 call Errors
 xor al,al
 mov ah,4Ch
 int 21h
-success:
+case_no_errors:
 ret
 Clear_Memory ENDP
 
@@ -134,7 +135,6 @@ check_end:
 cmp byte PTR es:[bx], 0
 jnz get_variables
 add bx, 3
-lea si, Overl_Path
 ret
 Variables ENDP
 
@@ -147,7 +147,7 @@ push ds
 push dx
 mov dx, SEG DTA
 mov ds, dx
-mov dx, offset DTA
+lea dx, DTA
 mov ax, 1A00h ; в области памяти буфера DTA со смещением 1Ah будет находиться младшее слово размера файла
 int 21h
 pop dx
@@ -266,11 +266,11 @@ push cx
 push dx
 mov bx, SEG Overlay_Adress
 mov es, bx
-mov bx, offset Overlay_Adress
+lea bx, Overlay_Adress
 
 mov dx, SEG Overl_Path
 mov ds, dx
-mov dx, offset Overl_Path
+lea dx, Overl_Path
 push ss
 push sp
 
