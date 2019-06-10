@@ -57,11 +57,11 @@ case_req:
   
     in al,61h 
     mov ah, al
-    or al,80h 
+    or al,80h ;подтверждаем 
+    out 61h,al ;посылаем
+    xchg ah,al  ;возвращаем
     out 61h,al 
-    xchg ah,al  ; извлечь исходное значение порта
-    out 61h,al 
-    mov al,20h 
+    mov al,20h ;сигнал конец прерывания
     out 20h,al 
     pop ax
 add_to_buff:
@@ -92,7 +92,7 @@ case_end:
 LAST_BYTE:
 ROUT ENDP
 
-Set_Int PROC
+Set_Int PROC	;установка пользовательского обработчика
     push ax
     push dx
     push ds
@@ -115,7 +115,7 @@ Set_Int PROC
     ret
 Set_Int ENDP
 
-Rem_Int PROC
+Rem_Int PROC	;вернуть стандартный обработчик
     push ax
     push ds
     cli
